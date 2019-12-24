@@ -7,18 +7,18 @@ function success () {
   echo -e "[ \033[00;32mOK\033[0m ] $1\n"
 }
 
-# Vars
-export BORG_REPO=''
-export BORG_PASSPHRASE=''
-export BORG_BASE_DIR='/usr/local/var/lib/borg'
-export BORG_CACHE_DIR='/usr/local/var/lib/borg/cache'
-export BORG_SECURITY_DIR='/usr/local/var/lib/borg/security'
-export BORG_CONFIG_DIR='/usr/local/etc/borg'
-export BORG_KEYS_DIR='/usr/local/etc/borg/keys'
-export BORG_KEY_FILE='/usr/local/etc/borg/keys/id_ed25519'
+function fail () {
+  echo -e "[\033[0;31mFAIL\033[0m] $1\n"
+  exit 1
+}
 
-BACKUP='macos-{now:%Y-%m-%d--%H-%M-%S}'
-S3_BUCKET=''
+# Vars
+ENV_FILE=$(dirname $0)/.env
+if [ ! -f "${ENV_FILE}" ]; then
+  fail "Copy the .env.sample file to .env and fill out the empty variables"
+fi
+
+source .env
 
 # Backup
 borg create                                                   \
