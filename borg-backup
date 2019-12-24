@@ -25,7 +25,6 @@ borg create                                                   \
   --compression zlib,6                                        \
   --exclude-from '/usr/local/etc/borg/backup.excludes'        \
   --filter AME                                                \
-  --list                                                      \
   --show-rc                                                   \
   --stats                                                     \
   ::${BACKUP}                                                 \
