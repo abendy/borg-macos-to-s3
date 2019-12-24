@@ -6,8 +6,8 @@
 brew install borg
 brew cask install borgbackup
 
-git clone git@github.com:abendy/borg-to-s3.git
-cd borg-to-s3
+git clone git@github.com:abendy/borg-macos-to-s3.git
+cd borg-macos-to-s3
 
 cp borg-backup.sh /usr/local/bin/
 
