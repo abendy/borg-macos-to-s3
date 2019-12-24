@@ -10,12 +10,12 @@ function success () {
 # Vars
 export BORG_REPO=''
 export BORG_PASSPHRASE=''
-export BORG_BASE_DIR="/usr/local/var/lib/borg"
-export BORG_CACHE_DIR="/usr/local/var/lib/borg/cache"
-export BORG_SECURITY_DIR="/usr/local/var/lib/borg/security"
-export BORG_CONFIG_DIR="/usr/local/etc/borg"
-export BORG_KEYS_DIR="/usr/local/etc/borg/keys"
-export BORG_KEY_FILE="/usr/local/etc/borg/keys/id_ed25519"
+export BORG_BASE_DIR='/usr/local/var/lib/borg'
+export BORG_CACHE_DIR='/usr/local/var/lib/borg/cache'
+export BORG_SECURITY_DIR='/usr/local/var/lib/borg/security'
+export BORG_CONFIG_DIR='/usr/local/etc/borg'
+export BORG_KEYS_DIR='/usr/local/etc/borg/keys'
+export BORG_KEY_FILE='/usr/local/etc/borg/keys/id_ed25519'
 
 BACKUP='macos-{now:%Y-%m-%d--%H-%M-%S}'
 S3_BUCKET=''
