@@ -39,6 +39,7 @@ fi
 # Backup
 borg create                                                   \
   --compression zlib,6                                        \
+  --exclude-caches                                            \
   --exclude-from ${EXCLUDES}                                  \
   --filter AME                                                \
   --show-rc                                                   \
