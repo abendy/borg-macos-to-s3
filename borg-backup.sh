@@ -43,18 +43,23 @@ borg create                                                   \
   --filter AME                                                \
   --show-rc                                                   \
   --stats                                                     \
+  --verbose                                                   \
   ::${BACKUP}                                                 \
   /Users/abendy                                               \
   /etc                                                        \
-  /usr
+  /usr                                                        \
+  2>> ${LOG_FILE}
+
 success 'Backup complete'
 
 # Prune
 borg prune -v --list ${BORG_REPO} --prefix 'macos-' --keep-daily=14 --keep-weekly=4 --keep-monthly=6
+
 success 'Prune complete'
 
 # Sync to S3
 borg with-lock ${BORG_REPO} aws s3 sync ${BORG_REPO} s3://${S3_BUCKET} --delete
+
 success 'Sync complete'
 
 exit 0;
