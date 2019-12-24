@@ -1,33 +1,5 @@
-/Users/abendy/.composer/cache
-/Users/abendy/.ndenv/versions
-/Users/abendy/.nodenv/versions
-/Users/abendy/.npm/_cacache
-/Users/abendy/.nvm/versions
-/Users/abendy/.phpbrew/build
-/Users/abendy/.phpenv/.git
-/Users/abendy/.phpls
-/Users/abendy/.pyenv/versions
-/Users/abendy/.rbenv/versions
-/Users/abendy/.Trash
-/Users/abendy/.vagrant.d/boxes
-/Users/abendy/Applications
-/Users/abendy/Creative Cloud Files
-/Users/abendy/Documents
-/Users/abendy/Downloads
-/Users/abendy/Dropbox
-/Users/abendy/Google Drive
-/Users/abendy/Library/Caches
-/Users/abendy/Library/Containers
-/Users/abendy/Library/Developer
-/Users/abendy/Movies
-/Users/abendy/Music
-/Users/abendy/Pictures
-/Users/abendy/Public
-/Users/abendy/VirtualBox VMs
-/usr/local/var/cache
-/usr/local/var/run
-re:cache
-re:Cache
-re:/node_modules/
-re:/vendor/
-re:/venv/
+'re:cache'
+'re:Cache'
+'re:/node_modules/'
+'re:/vendor/'
+'re:/venv/'
