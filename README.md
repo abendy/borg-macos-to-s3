@@ -36,6 +36,10 @@ cp backup.excludes.sample /usr/local/etc/borg/backup.excludes
 
 vi /usr/local/etc/borg/backup.excludes
 
+cp backup.includes.sample /usr/local/etc/borg/backup.includes
+
+vi /usr/local/etc/borg/backup.includes
+
 cp .env.sample /usr/local/etc/borg/.env
 
 vi /usr/local/etc/borg/.env

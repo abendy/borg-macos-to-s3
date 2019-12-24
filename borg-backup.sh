@@ -26,6 +26,12 @@ if [ ! -f "${EXCLUDES}" ]; then
   fail 'No excludes file. Copy and edit the provided sample excludes file. See documentation.'
 fi
 
+# Test for includes file
+INCLUDES='/usr/local/etc/borg/backup.includes'
+if [ ! -f "${INCLUDES}" ]; then
+  fail 'No includes file. Copy and edit the provided sample includes file. See documentation.'
+fi
+
 # Test for backup repository
 if [ -z "${BORG_REPO}" ]; then
   fail 'No backup repository defined.'
@@ -42,13 +48,12 @@ borg create                                                   \
   --exclude-caches                                            \
   --exclude-from ${EXCLUDES}                                  \
   --filter AME                                                \
+  --patterns-from ${INCLUDES}                                 \
   --show-rc                                                   \
   --stats                                                     \
   --verbose                                                   \
   ::${BACKUP}                                                 \
-  /Users/abendy                                               \
-  /etc                                                        \
-  /usr                                                        \
+  /                                                           \
   2>> ${LOG_FILE}
 
 success 'Backup complete'
