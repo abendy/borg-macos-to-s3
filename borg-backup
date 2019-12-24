@@ -13,7 +13,7 @@ function fail () {
 }
 
 # Vars
-ENV_FILE=$(dirname $0)/.env
+ENV_FILE=/usr/local/etc/borg/.env
 if [ ! -f "${ENV_FILE}" ]; then
   fail "Copy the .env.sample file to .env and fill out the empty variables"
 fi
