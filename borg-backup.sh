@@ -12,7 +12,7 @@ function fail () {
   exit 1
 }
 
-# Vars
+# Test for environment variables file
 ENV_FILE='/usr/local/etc/borg/.env'
 if [ ! -f "${ENV_FILE}" ]; then
   fail 'No environment variables file. Copy and edit the provided environment variables sample file. See documentation.'
@@ -20,18 +20,18 @@ fi
 
 source ${ENV_FILE}
 
-# Excludes
+# Test for excludes file
 EXCLUDES='/usr/local/etc/borg/backup.excludes'
 if [ ! -f "${EXCLUDES}" ]; then
   fail 'No excludes file. Copy and edit the provided sample excludes file. See documentation.'
 fi
 
-# Repo
+# Test for backup repository
 if [ -z "${BORG_REPO}" ]; then
   fail 'No backup repository defined.'
 fi
 
-# S3 bucket
+# Test for S3 bucket
 if [ -z "${S3_BUCKET}" ]; then
   fail 'No S3 bucket defined.'
 fi
