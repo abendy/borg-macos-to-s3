@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Exit immediately on errors
+set -e
+
+function success () {
+  echo -e "[ \033[00;32mOK\033[0m ] $1\n"
+}
+
+# Vars
+export BORG_REPO=''
+export BORG_PASSPHRASE=''
+export BORG_BASE_DIR="/usr/local/var/lib/borg"
+export BORG_CACHE_DIR="/usr/local/var/lib/borg/cache"
+export BORG_SECURITY_DIR="/usr/local/var/lib/borg/security"
+export BORG_CONFIG_DIR="/usr/local/etc/borg"
+export BORG_KEYS_DIR="/usr/local/etc/borg/keys"
+export BORG_KEY_FILE="/usr/local/etc/borg/keys/id_ed25519"
+
+BACKUP='macos-{now:%Y-%m-%d--%H-%M-%S}'
+S3_BUCKET=''
+
+# Backup
+borg create                                                   \
+  --compression zlib,6                                        \
+  --exclude-from '/usr/local/etc/borg/backup.excludes'        \
+  --filter AME                                                \
+  --list                                                      \
+  --show-rc                                                   \
+  --stats                                                     \
+  ::${BACKUP}                                                 \
+  /Users/abendy                                               \
+  /etc                                                        \
+  /usr
+success 'Backup complete'
+
+# Prune
+borg prune -v --list ${BORG_REPO} --prefix 'macos-' --keep-daily=14 --keep-weekly=4 --keep-monthly=6
+success 'Prune complete'
+
+# Sync to S3
+borg with-lock ${BORG_REPO} aws s3 sync ${BORG_REPO} s3://${S3_BUCKET} --delete
+success 'Sync complete'
+
+exit 0;
