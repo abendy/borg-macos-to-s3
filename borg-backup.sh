@@ -13,17 +13,33 @@ function fail () {
 }
 
 # Vars
-ENV_FILE=/usr/local/etc/borg/.env
+ENV_FILE='/usr/local/etc/borg/.env'
 if [ ! -f "${ENV_FILE}" ]; then
-  fail "Copy the .env.sample file to .env and fill out the empty variables"
+  fail 'No environment variables file. Copy and edit the provided environment variables sample file. See documentation.'
 fi
 
-source .env
+source ${ENV_FILE}
+
+# Excludes
+EXCLUDES='/usr/local/etc/borg/backup.excludes'
+if [ ! -f "${EXCLUDES}" ]; then
+  fail 'No excludes file. Copy and edit the provided sample excludes file. See documentation.'
+fi
+
+# Repo
+if [ -z "${BORG_REPO}" ]; then
+  fail 'No backup repository defined.'
+fi
+
+# S3 bucket
+if [ -z "${S3_BUCKET}" ]; then
+  fail 'No S3 bucket defined.'
+fi
 
 # Backup
 borg create                                                   \
   --compression zlib,6                                        \
-  --exclude-from '/usr/local/etc/borg/backup.excludes'        \
+  --exclude-from ${EXCLUDES}                                  \
   --filter AME                                                \
   --show-rc                                                   \
   --stats                                                     \
