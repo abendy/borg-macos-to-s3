@@ -51,7 +51,7 @@ borg create                                                   \
 success 'Backup complete'
 
 # Prune
-borg prune -v --list ${BORG_REPO} --prefix 'macos-' --keep-daily=14 --keep-weekly=4 --keep-monthly=6
+borg prune -v --list ${BORG_REPO} --prefix 'macos-{hostname}-' --keep-daily=14 --keep-weekly=4 --keep-monthly=6
 
 success 'Prune complete'
 
