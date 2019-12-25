@@ -45,7 +45,6 @@ borg create                                                   \
   --stats                                                     \
   --verbose                                                   \
   ::${BACKUP}                                                 \
-  /                                                           \
   2>> ${BORG_LOG_FILE}
 
 success 'Backup complete'
