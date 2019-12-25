@@ -3,14 +3,6 @@
 # Exit immediately on errors
 set -e
 
-function success () {
-  echo -e "[ \033[00;32mOK\033[0m ] $1\n"
-}
-
-function fail () {
-  echo -e "[\033[0;31mFAIL\033[0m] $1\n"
-  exit 1
-}
 
 # Test for environment variables file
 ENV_FILE='/usr/local/etc/borg/.env'
@@ -67,5 +59,14 @@ success 'Prune complete'
 borg with-lock ${BORG_REPO} aws s3 sync ${BORG_REPO} s3://${S3_BUCKET} --delete
 
 success 'Sync complete'
+function success () {
+  echo -e "[ \033[00;32mOK\033[0m ] $1\n"
+}
+
+
+function fail () {
+  echo -e "[\033[0;31mFAIL\033[0m] $1\n"
+  exit 1
+}
 
 exit 0;
