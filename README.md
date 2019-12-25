@@ -27,19 +27,21 @@ sudo chmod 0644 /usr/local/etc/borg/keys/*.pub
 
 ## Config
 
-[Excludes](https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns)
-
-[Environment variables](https://borgbackup.readthedocs.io/en/stable/usage/general.html#environment-variables)
+[Includes & excludes](https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns)
 
 ```sh
-cp backup.excludes.sample /usr/local/etc/borg/backup.excludes
-
-vi /usr/local/etc/borg/backup.excludes
-
 cp backup.includes.sample /usr/local/etc/borg/backup.includes
 
 vi /usr/local/etc/borg/backup.includes
 
+cp backup.excludes.sample /usr/local/etc/borg/backup.excludes
+
+vi /usr/local/etc/borg/backup.excludes
+```
+
+[Environment variables](https://borgbackup.readthedocs.io/en/stable/usage/general.html#environment-variables)
+
+```sh
 cp .env.sample /usr/local/etc/borg/.env
 
 vi /usr/local/etc/borg/.env
