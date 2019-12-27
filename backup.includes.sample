@@ -1,3 +1,17 @@
-R /
-+ /etc
-+ /usr
+R /Users/
+- /Users/*/Applications/
+- /Users/*/Documents/
+- /Users/*/Downloads/
+- /Users/*/Dropbox/
+- /Users/*/Google Drive/
+- /Users/*/Library/Caches/
+- /Users/*/Library/Containers/
+- /Users/*/Library/Developer/
+- /Users/*/Movies/
+- /Users/*/Music/
+- /Users/*/Pictures/
+- /Users/*/Public/
+R /private/etc/
+R /usr/
+- /usr/local/var/cache/
+- /usr/local/var/run/
