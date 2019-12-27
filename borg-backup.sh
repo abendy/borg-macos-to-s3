@@ -3,64 +3,66 @@
 # Exit immediately on errors
 set -e
 
+function main () {
+  # Test for environment variables file
+  ENV_FILE='/usr/local/etc/borg/.env'
+  if [ ! -f "${ENV_FILE}" ]; then
+    fail 'No environment variables file. Copy and edit the provided environment variables sample file. See documentation.'
+  fi
 
-# Test for environment variables file
-ENV_FILE='/usr/local/etc/borg/.env'
-if [ ! -f "${ENV_FILE}" ]; then
-  fail 'No environment variables file. Copy and edit the provided environment variables sample file. See documentation.'
-fi
+  source ${ENV_FILE}
 
-source ${ENV_FILE}
+  # Test for excludes file
+  EXCLUDES='/usr/local/etc/borg/backup.excludes'
+  if [ ! -f "${EXCLUDES}" ]; then
+    fail 'No excludes file. Copy and edit the provided sample excludes file. See documentation.'
+  fi
 
-# Test for excludes file
-EXCLUDES='/usr/local/etc/borg/backup.excludes'
-if [ ! -f "${EXCLUDES}" ]; then
-  fail 'No excludes file. Copy and edit the provided sample excludes file. See documentation.'
-fi
+  # Test for includes file
+  INCLUDES='/usr/local/etc/borg/backup.includes'
+  if [ ! -f "${INCLUDES}" ]; then
+    fail 'No includes file. Copy and edit the provided sample includes file. See documentation.'
+  fi
 
-# Test for includes file
-INCLUDES='/usr/local/etc/borg/backup.includes'
-if [ ! -f "${INCLUDES}" ]; then
-  fail 'No includes file. Copy and edit the provided sample includes file. See documentation.'
-fi
+  # Test for backup repository
+  if [ -z "${BORG_REPO}" ]; then
+    fail 'No backup repository defined.'
+  fi
 
-# Test for backup repository
-if [ -z "${BORG_REPO}" ]; then
-  fail 'No backup repository defined.'
-fi
+  # Test for S3 bucket
+  if [ -z "${S3_BUCKET}" ]; then
+    fail 'No S3 bucket defined.'
+  fi
 
-# Test for S3 bucket
-if [ -z "${S3_BUCKET}" ]; then
-  fail 'No S3 bucket defined.'
-fi
+  # Keep-alive: update existing `sudo` time stamp until the script has finished
+  while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-# Keep-alive: update existing `sudo` time stamp until the script has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+  # Backup
+  borg create                                                   \
+    --compression zlib,6                                        \
+    --exclude-caches                                            \
+    --exclude-from ${EXCLUDES}                                  \
+    --filter AME                                                \
+    --patterns-from ${INCLUDES}                                 \
+    --show-rc                                                   \
+    --stats                                                     \
+    --verbose                                                   \
+    ::${BACKUP}                                                 \
+    2>> ${BORG_LOG_FILE}
 
-# Backup
-borg create                                                   \
-  --compression zlib,6                                        \
-  --exclude-caches                                            \
-  --exclude-from ${EXCLUDES}                                  \
-  --filter AME                                                \
-  --patterns-from ${INCLUDES}                                 \
-  --show-rc                                                   \
-  --stats                                                     \
-  --verbose                                                   \
-  ::${BACKUP}                                                 \
-  2>> ${BORG_LOG_FILE}
+  success 'Backup complete'
 
-success 'Backup complete'
+  # Prune
+  borg prune -v --list ${BORG_REPO} --prefix 'macos-{hostname}-' --keep-daily=14 --keep-weekly=4 --keep-monthly=6
 
-# Prune
-borg prune -v --list ${BORG_REPO} --prefix 'macos-{hostname}-' --keep-daily=14 --keep-weekly=4 --keep-monthly=6
+  success 'Prune complete'
 
-success 'Prune complete'
+  # Sync to S3
+  borg with-lock ${BORG_REPO} aws s3 sync ${BORG_REPO} s3://${S3_BUCKET} --delete
 
-# Sync to S3
-borg with-lock ${BORG_REPO} aws s3 sync ${BORG_REPO} s3://${S3_BUCKET} --delete
+  success 'Sync complete'
+}
 
-success 'Sync complete'
 function success () {
   echo -e "[ \033[00;32mOK\033[0m ] $1\n"
 }
@@ -70,5 +72,7 @@ function fail () {
   echo -e "[\033[0;31mFAIL\033[0m] $1\n"
   exit 1
 }
+
+main "$@";
 
 exit 0;
