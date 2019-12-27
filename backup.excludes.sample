@@ -1,6 +1,6 @@
-'re:cache'
-'re:Cache'
-'re:/node_modules/'
-'re:/\.Trash/'
-'re:/vendor/'
-'re:/venv/'
+re:cache
+re:Cache
+re:\.log$
+re:/node_modules/
+re:/\.Trash/
+re:/vendor/
