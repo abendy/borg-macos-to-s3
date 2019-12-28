@@ -58,7 +58,10 @@ function main () {
   success 'Prune complete'
 
   # Sync to S3
-  borg with-lock ${BORG_REPO} aws s3 sync ${BORG_REPO} s3://${S3_BUCKET} --delete
+  borg with-lock ${BORG_REPO}                                   \
+    aws s3 sync ${BORG_REPO} s3://${S3_BUCKET}                  \
+      --delete                                                  \
+      >> ${BORG_LOG_FILE}
 
   success 'Sync complete'
 }
