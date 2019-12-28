@@ -78,6 +78,10 @@ function main () {
   alert "backup complete at $(date '+%Y-%m-%d %H:%M:%S')"
 }
 
+r=$'\e[1;31m'
+g=$'\e[1;32m'
+e=$'\e[0m'
+
 function alert () {
   aws ses send-email \
     --from "${FROM_EMAIL}" \
@@ -86,12 +90,12 @@ function alert () {
 }
 
 function success () {
-  echo -e "[ \033[00;32mOK\033[0m ] $1\n" \
+  printf "%s\n\n" "[ ${g}OK${e} ] $1" \
     2>&1 | tee -a ${BORG_LOG_FILE}
 }
 
 function fail () {
-  echo -e "[\033[0;31mFAIL\033[0m] $1\n"  \
+  printf "%s\n\n" "[ ${r}FAIL${e} ] $1"  \
     2>&1 | tee -a ${BORG_LOG_FILE}
   alert $1
   exit 1
