@@ -81,7 +81,7 @@ function alert () {
   aws ses send-email \
     --from "${FROM_EMAIL}" \
     --destination "ToAddresses=${TO_EMAIL}" \
-    --message "Subject={Data=from ses,Charset=utf8},Body={Text={Data=$1,Charset=utf8},Html={Data=$1,Charset=utf8}}" \
+    --message "Subject={Data=from ses,Charset=utf8},Body={Text={Data=$1,Charset=utf8},Html={Data=$1,Charset=utf8}}"
 }
 
 function success () {
