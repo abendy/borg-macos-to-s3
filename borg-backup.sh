@@ -83,10 +83,6 @@ function main () {
   alert "backup complete at ${RN}"
 }
 
-r=$'\e[1;31m'
-g=$'\e[1;32m'
-e=$'\e[0m'
-
 function alert () {
   aws ses send-email \
     --from "${FROM_EMAIL}" \
@@ -95,12 +91,12 @@ function alert () {
 }
 
 function success () {
-  printf "%s\n\n" "[ ${g}OK${e} ] $1" \
+  printf "\n%s\n\n" "[ OK ] $1" \
     2>&1 | tee -a ${BORG_LOG_FILE}
 }
 
 function fail () {
-  printf "%s\n\n" "[ ${r}FAIL${e} ] $1"  \
+  printf "\n%s\n\n" "[ FAIL ] $1"  \
     2>&1 | tee -a ${BORG_LOG_FILE}
   alert $1
   exit 1
