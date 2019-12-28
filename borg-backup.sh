@@ -49,7 +49,7 @@ function main () {
     --show-rc                                                   \
     --stats                                                     \
     --verbose                                                   \
-    ::${BACKUP}                                                 \
+    ::${BACKUP_NAME}                                            \
     2>> ${BORG_LOG_FILE}
 
   success 'Backup complete'
