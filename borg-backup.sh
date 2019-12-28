@@ -74,12 +74,13 @@ function main () {
 }
 
 function success () {
-  echo -e "[ \033[00;32mOK\033[0m ] $1\n"
+  echo -e "[ \033[00;32mOK\033[0m ] $1\n" \
+    2>&1 | tee -a ${BORG_LOG_FILE}
 }
 
-
 function fail () {
-  echo -e "[\033[0;31mFAIL\033[0m] $1\n"
+  echo -e "[\033[0;31mFAIL\033[0m] $1\n"  \
+    2>&1 | tee -a ${BORG_LOG_FILE}
   exit 1
 }
 
