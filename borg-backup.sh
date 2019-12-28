@@ -3,8 +3,6 @@
 # Exit immediately on errors
 set -e
 
-RN=$(date '+%Y-%m-%d %H:%M:%S')
-
 function check_requirements () {
   which aws &> /dev/null
   if [ $? -ne 0 ]; then
@@ -88,8 +86,6 @@ function main () {
       >> ${BORG_LOG_FILE}
 
   success 'Sync complete'
-
-  alert "backup complete at ${RN}"
 }
 
 function alert () {
@@ -111,17 +107,19 @@ function fail () {
   exit 1
 }
 
+RN=$(date '+%Y-%m-%d-%H:%M:%S')
+
 export BORG_ENV_FILE='/usr/local/etc/borg/.env'
 export BORG_INCLUDES='/usr/local/etc/borg/backup.includes'
 export BORG_EXCLUDES='/usr/local/etc/borg/backup.excludes'
-
-check_requirements
+export BORG_LOG_FILE="/usr/local/var/log/borg.log"
 
 source ${BORG_ENV_FILE}
 
-# Keep-alive: update existing `sudo` time stamp until the script has finished
-# while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+check_requirements
 
 main "$@";
+
+alert "Borg backup complete"
 
 exit 0;
