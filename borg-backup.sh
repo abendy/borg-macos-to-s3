@@ -12,16 +12,16 @@ function main () {
 
   source ${ENV_FILE}
 
-  # Test for excludes file
-  EXCLUDES='/usr/local/etc/borg/backup.excludes'
-  if [ ! -f "${EXCLUDES}" ]; then
-    fail 'No excludes file. Copy and edit the provided sample excludes file. See documentation.'
-  fi
-
   # Test for includes file
   INCLUDES='/usr/local/etc/borg/backup.includes'
   if [ ! -f "${INCLUDES}" ]; then
     fail 'No includes file. Copy and edit the provided sample includes file. See documentation.'
+  fi
+
+  # Test for excludes file
+  EXCLUDES='/usr/local/etc/borg/backup.excludes'
+  if [ ! -f "${EXCLUDES}" ]; then
+    fail 'No excludes file. Copy and edit the provided sample excludes file. See documentation.'
   fi
 
   # Test for backup repository
