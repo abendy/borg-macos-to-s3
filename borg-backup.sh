@@ -5,40 +5,49 @@ set -e
 
 RN=$(date '+%Y-%m-%d %H:%M:%S')
 
-function main () {
+function check_requirements () {
+  which aws &> /dev/null
+  if [ $? -ne 0 ]; then
+    fail 'aws cli tool needs to be installed. See documentation.'
+  fi
+
+  which base64 &> /dev/null
+  if [ $? -ne 0 ]; then
+    fail 'base64 tool needs to be installed. See documentation.'
+  fi
+
   # Test for environment variables file
-  ENV_FILE='/usr/local/etc/borg/.env'
   if [ ! -f "${ENV_FILE}" ]; then
     fail 'No environment variables file. Copy and edit the provided environment variables sample file. See documentation.'
   fi
 
-  source ${ENV_FILE}
-
   # Test for includes file
-  INCLUDES='/usr/local/etc/borg/backup.includes'
   if [ ! -f "${INCLUDES}" ]; then
     fail 'No includes file. Copy and edit the provided sample includes file. See documentation.'
   fi
 
   # Test for excludes file
-  EXCLUDES='/usr/local/etc/borg/backup.excludes'
   if [ ! -f "${EXCLUDES}" ]; then
     fail 'No excludes file. Copy and edit the provided sample excludes file. See documentation.'
   fi
 
   # Test for backup repository
   if [ -z "${BORG_REPO}" ]; then
-    fail 'No backup repository defined.'
+    fail 'No backup repository defined. Fill out the .env file. See documentation.'
   fi
 
   # Test for S3 bucket
   if [ -z "${S3_BUCKET}" ]; then
-    fail 'No S3 bucket defined.'
+    fail 'No S3 bucket defined. Fill out the .env file. See documentation.'
   fi
 
-  # Keep-alive: update existing `sudo` time stamp until the script has finished
-  while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+  # Test for emails
+  if [ -z "${FROM_EMAIL}" -o -z "${TO_EMAIL}" ]; then
+    fail 'No From or To defined. Fill out the .env file. See documentation.'
+  fi
+}
 
+function main () {
   # Truncate log file
   : > ${BORG_LOG_FILE}
 
@@ -101,6 +110,17 @@ function fail () {
   alert $1
   exit 1
 }
+
+ENV_FILE='/usr/local/etc/borg/.env'
+INCLUDES='/usr/local/etc/borg/backup.includes'
+EXCLUDES='/usr/local/etc/borg/backup.excludes'
+
+check_requirements
+
+source ${ENV_FILE}
+
+# Keep-alive: update existing `sudo` time stamp until the script has finished
+# while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 main "$@";
 
