@@ -92,6 +92,7 @@ function success () {
 function fail () {
   echo -e "[\033[0;31mFAIL\033[0m] $1\n"  \
     2>&1 | tee -a ${BORG_LOG_FILE}
+  alert $1
   exit 1
 }
 
