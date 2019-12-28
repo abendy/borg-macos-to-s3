@@ -17,17 +17,17 @@ function check_requirements () {
   fi
 
   # Test for environment variables file
-  if [ ! -f "${ENV_FILE}" ]; then
+  if [ ! -f "${BORG_ENV_FILE}" ]; then
     fail 'No environment variables file. Copy and edit the provided environment variables sample file. See documentation.'
   fi
 
   # Test for includes file
-  if [ ! -f "${INCLUDES}" ]; then
+  if [ ! -f "${BORG_INCLUDES}" ]; then
     fail 'No includes file. Copy and edit the provided sample includes file. See documentation.'
   fi
 
   # Test for excludes file
-  if [ ! -f "${EXCLUDES}" ]; then
+  if [ ! -f "${BORG_EXCLUDES}" ]; then
     fail 'No excludes file. Copy and edit the provided sample excludes file. See documentation.'
   fi
 
@@ -37,12 +37,12 @@ function check_requirements () {
   fi
 
   # Test for S3 bucket
-  if [ -z "${S3_BUCKET}" ]; then
+  if [ -z "${BORG_S3_BUCKET}" ]; then
     fail 'No S3 bucket defined. Fill out the .env file. See documentation.'
   fi
 
   # Test for emails
-  if [ -z "${FROM_EMAIL}" -o -z "${TO_EMAIL}" ]; then
+  if [ -z "${BORG_FROM_EMAIL}" -o -z "${BORG_TO_EMAIL}" ]; then
     fail 'No From or To defined. Fill out the .env file. See documentation.'
   fi
 }
@@ -55,15 +55,15 @@ function main () {
   borg create                                                   \
     --compression zlib,6                                        \
     --exclude-caches                                            \
-    --exclude-from ${EXCLUDES}                                  \
+    --exclude-from ${BORG_EXCLUDES}                             \
     --filter AME                                                \
-    --patterns-from ${INCLUDES}                                 \
     --list                                                      \
     --progress                                                  \
+    --patterns-from ${BORG_INCLUDES}                            \
     --show-rc                                                   \
     --stats                                                     \
     --verbose                                                   \
-    ::${BACKUP_NAME}                                            \
+    ::${BORG_BACKUP_NAME}                                       \
     2>> ${BORG_LOG_FILE}
 
   success 'Backup complete'
@@ -83,7 +83,7 @@ function main () {
 
   # Sync to S3
   borg with-lock ${BORG_REPO}                                   \
-    aws s3 sync ${BORG_REPO} s3://${S3_BUCKET}                  \
+    aws s3 sync ${BORG_REPO} s3://${BORG_S3_BUCKET}             \
       --delete                                                  \
       >> ${BORG_LOG_FILE}
 
@@ -111,13 +111,13 @@ function fail () {
   exit 1
 }
 
-ENV_FILE='/usr/local/etc/borg/.env'
-INCLUDES='/usr/local/etc/borg/backup.includes'
-EXCLUDES='/usr/local/etc/borg/backup.excludes'
+export BORG_ENV_FILE='/usr/local/etc/borg/.env'
+export BORG_INCLUDES='/usr/local/etc/borg/backup.includes'
+export BORG_EXCLUDES='/usr/local/etc/borg/backup.excludes'
 
 check_requirements
 
-source ${ENV_FILE}
+source ${BORG_ENV_FILE}
 
 # Keep-alive: update existing `sudo` time stamp until the script has finished
 # while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
