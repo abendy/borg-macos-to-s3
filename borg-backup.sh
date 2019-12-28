@@ -73,6 +73,8 @@ function main () {
       >> ${BORG_LOG_FILE}
 
   success 'Sync complete'
+
+  alert "Backup complete for ${BACKUP}"
 }
 
 function alert () {
