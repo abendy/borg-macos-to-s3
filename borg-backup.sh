@@ -74,14 +74,14 @@ function main () {
 
   success 'Sync complete'
 
-  alert "Backup complete for ${BACKUP}"
+  alert "backup complete at $(date '+%Y-%m-%d %H:%M:%S')"
 }
 
 function alert () {
   aws ses send-email \
     --from "${FROM_EMAIL}" \
     --destination "ToAddresses=${TO_EMAIL}" \
-    --message "Subject={Data=from ses,Charset=utf8},Body={Text={Data=$1,Charset=utf8},Html={Data=$1,Charset=utf8}}"
+    --message "Subject={Data=Borg $1,Charset=utf8},Body={Text={Data=$1,Charset=utf8},Html={Data=$1,Charset=utf8}}"
 }
 
 function success () {
