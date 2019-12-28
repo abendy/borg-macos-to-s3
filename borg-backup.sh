@@ -44,6 +44,8 @@ function main () {
     --exclude-from ${EXCLUDES}                                  \
     --filter AME                                                \
     --patterns-from ${INCLUDES}                                 \
+    --list                                                      \
+    --progress                                                  \
     --show-rc                                                   \
     --stats                                                     \
     --verbose                                                   \
