@@ -3,6 +3,8 @@
 # Exit immediately on errors
 set -e
 
+RN=$(date '+%Y-%m-%d %H:%M:%S')
+
 function main () {
   # Test for environment variables file
   ENV_FILE='/usr/local/etc/borg/.env'
@@ -78,7 +80,7 @@ function main () {
 
   success 'Sync complete'
 
-  alert "backup complete at $(date '+%Y-%m-%d %H:%M:%S')"
+  alert "backup complete at ${RN}"
 }
 
 r=$'\e[1;31m'
