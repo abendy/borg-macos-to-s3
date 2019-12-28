@@ -75,6 +75,13 @@ function main () {
   success 'Sync complete'
 }
 
+function alert () {
+  aws ses send-email \
+    --from "${FROM_EMAIL}" \
+    --destination "ToAddresses=${TO_EMAIL}" \
+    --message "Subject={Data=from ses,Charset=utf8},Body={Text={Data=$1,Charset=utf8},Html={Data=$1,Charset=utf8}}" \
+}
+
 function success () {
   echo -e "[ \033[00;32mOK\033[0m ] $1\n" \
     2>&1 | tee -a ${BORG_LOG_FILE}
