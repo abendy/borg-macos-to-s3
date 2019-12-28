@@ -53,7 +53,14 @@ function main () {
   success 'Backup complete'
 
   # Prune
-  borg prune -v --list ${BORG_REPO} --prefix 'macos-{hostname}-' --keep-daily=14 --keep-weekly=4 --keep-monthly=6
+  borg prune                                                    \
+    --keep-daily=14                                             \
+    --keep-weekly=4                                             \
+    --keep-monthly=6                                            \
+    --list ${BORG_REPO}                                         \
+    --prefix 'macos-{hostname}-'                                \
+    --verbose                                                   \
+    2>> ${BORG_LOG_FILE}
 
   success 'Prune complete'
 
