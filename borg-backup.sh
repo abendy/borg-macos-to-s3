@@ -55,8 +55,6 @@ function main () {
     --exclude-caches                                            \
     --exclude-from ${BORG_EXCLUDES}                             \
     --filter AME                                                \
-    --list                                                      \
-    --progress                                                  \
     --patterns-from ${BORG_INCLUDES}                            \
     --show-rc                                                   \
     --stats                                                     \
@@ -83,16 +81,30 @@ function main () {
   borg with-lock ${BORG_REPO}                                   \
     aws s3 sync ${BORG_REPO} s3://${BORG_S3_BUCKET}             \
       --delete                                                  \
+      --no-progress                                             \
       >> ${BORG_LOG_FILE}
 
   success 'Sync complete'
 }
 
 function alert () {
-  aws ses send-email \
-    --from "${FROM_EMAIL}" \
-    --destination "ToAddresses=${TO_EMAIL}" \
-    --message "Subject={Data=Borg $1,Charset=utf8},Body={Text={Data=$1,Charset=utf8},Html={Data=$1,Charset=utf8}}"
+  FILENAME=$(basename "${BORG_LOG_FILE%}")
+  ATTACHMENT=`/usr/bin/base64 -i $BORG_LOG_FILE`
+  BODY=`echo "$1" | /usr/bin/base64`
+
+  TEMPLATE="ses-email-template.json"
+  TMPFILE="/tmp/ses-$(date +%s)"
+
+  cp $TEMPLATE $TMPFILE
+
+  sed -i -e "s/{SUBJECT}/$1/g" $TMPFILE
+  sed -i -e "s/{FROM}/${BORG_FROM_EMAIL}/g" $TMPFILE
+  sed -i -e "s/{RECVS}/${BORG_TO_EMAIL}/g" $TMPFILE
+  sed -i -e "s/{BODY}/$BODY/g" $TMPFILE
+  sed -i -e "s/{FILENAME}/$FILENAME/g" $TMPFILE
+  sed -i -e "s/{ATTACHMENT}/$ATTACHMENT/g" $TMPFILE
+
+  aws ses send-raw-email --raw-message file://$TMPFILE
 }
 
 function success () {
@@ -103,7 +115,7 @@ function success () {
 function fail () {
   printf "\n%s\n\n" "[ FAIL ] $1"  \
     2>&1 | tee -a ${BORG_LOG_FILE}
-  alert $1
+
   exit 1
 }
 
@@ -120,6 +132,6 @@ check_requirements
 
 main "$@";
 
-alert "Borg backup complete"
+alert "Borg backup complete at ${RN}"
 
 exit 0;

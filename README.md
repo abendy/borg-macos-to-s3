@@ -60,3 +60,9 @@ borg init --encryption=repokey-blake2
 ```sh
 sudo /usr/local/bin/borg-backup.sh
 ```
+
+***
+
+### Thanks
+
+[https://github.com/baturorkun/aws-ses-sender](https://github.com/baturorkun/aws-ses-sender)
