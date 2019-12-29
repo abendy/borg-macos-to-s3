@@ -112,7 +112,7 @@ function alert () {
   sed -i -e "s/{FILENAME}/$FILENAME/g" $TMPFILE
   sed -i -e "s/{ATTACHMENT}/$ATTACHMENT/g" $TMPFILE
 
-  aws ses send-raw-email --raw-message file://$TMPFILE
+  aws ses send-raw-email --raw-message file://$TMPFILE > /dev/null
 }
 
 function success () {
