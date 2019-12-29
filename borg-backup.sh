@@ -3,6 +3,13 @@
 # Exit immediately on errors
 set -e
 
+function check_last () {
+  if ps ax | grep $0 | grep -v $$ | grep bash | grep -v grep > /dev/null; then
+    echo 'Backup already running'
+    exit 1;
+  fi
+}
+
 function check_requirements () {
   which aws &> /dev/null
   if [ $? -ne 0 ]; then
@@ -127,6 +134,9 @@ export BORG_EXCLUDES='/usr/local/etc/borg/backup.excludes'
 export BORG_LOG_FILE="/usr/local/var/log/borg.log"
 
 source ${BORG_ENV_FILE}
+
+# Exit if borg is already running
+check_last
 
 check_requirements
 
