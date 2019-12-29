@@ -74,6 +74,7 @@ function main () {
   # Prune
   borg prune                                                    \
     --keep-within 2d                                            \
+    --keep-hourly=24                                            \
     --keep-daily=14                                             \
     --keep-weekly=4                                             \
     --keep-monthly=6                                            \
