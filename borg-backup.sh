@@ -142,6 +142,6 @@ check_requirements
 
 main "$@";
 
-alert "Borg backup complete at ${RN}"
+alert "Borg backup complete at $(date '+%Y-%m-%d-%H:%M:%S')"
 
 exit 0;
