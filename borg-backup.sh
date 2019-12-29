@@ -126,6 +126,7 @@ function fail () {
   exit 1
 }
 
+# Set up the environment
 RN=$(date '+%Y-%m-%d-%H:%M:%S')
 
 export BORG_ENV_FILE='/usr/local/etc/borg/.env'
@@ -138,10 +139,14 @@ source ${BORG_ENV_FILE}
 # Exit if borg is already running
 check_last
 
+# Check for require tools and environment variables
 check_requirements
 
+# Run the backup
 main "$@";
 
+# Let me know how it went
 alert "Borg backup complete at $(date '+%Y-%m-%d-%H:%M:%S')"
 
+# l8
 exit 0;
