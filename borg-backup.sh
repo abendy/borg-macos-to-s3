@@ -11,12 +11,12 @@ function check_last () {
 }
 
 function check_requirements () {
-  which aws &> /dev/null
+  which aws > /dev/null
   if [ $? -ne 0 ]; then
     fail 'aws cli tool needs to be installed. See documentation.'
   fi
 
-  which base64 &> /dev/null
+  which base64 > /dev/null
   if [ $? -ne 0 ]; then
     fail 'base64 tool needs to be installed. See documentation.'
   fi
