@@ -65,4 +65,4 @@ sudo /usr/local/bin/borg-backup.sh
 
 ### Thanks
 
-[https://github.com/baturorkun/aws-ses-sender](https://github.com/baturorkun/aws-ses-sender)
+[SES code](https://github.com/baturorkun/aws-ses-sender)
