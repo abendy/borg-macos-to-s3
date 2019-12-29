@@ -96,7 +96,7 @@ function main () {
 
 function alert () {
   FILENAME=$(basename "${BORG_LOG_FILE%}")
-  ATTACHMENT=`/usr/bin/base64 -i $BORG_LOG_FILE`
+  ATTACHMENT=`$BORG_LOG_FILE | /usr/bin/base64`
   BODY=`echo "$1" | /usr/bin/base64`
 
   TEMPLATE="ses-email-template.json"
