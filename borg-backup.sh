@@ -62,6 +62,7 @@ function main () {
     --exclude-caches                                            \
     --exclude-from ${BORG_EXCLUDES}                             \
     --filter AME                                                \
+    --list                                                      \
     --patterns-from ${BORG_INCLUDES}                            \
     --show-rc                                                   \
     --stats                                                     \
