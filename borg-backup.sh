@@ -91,6 +91,7 @@ function main () {
     aws s3 sync ${BORG_REPO} s3://${BORG_S3_BUCKET}             \
       --delete                                                  \
       --no-progress                                             \
+      --storage-class=STANDARD_IA                               \
       >> ${BORG_LOG_FILE}
 
   success 'Sync complete'
