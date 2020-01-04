@@ -132,11 +132,7 @@ function fail () {
 # Set up the environment
 RN=$(date '+%Y-%m-%d-%H:%M:%S')
 
-export BORG_ENV_FILE='/usr/local/etc/borg/.env'
-export BORG_INCLUDES='/usr/local/etc/borg/backup.includes'
-export BORG_EXCLUDES='/usr/local/etc/borg/backup.excludes'
-export BORG_LOG_FILE="/usr/local/var/log/borg.log"
-
+BORG_ENV_FILE='/usr/local/etc/borg/.env'
 source ${BORG_ENV_FILE}
 
 # Exit if borg is already running
