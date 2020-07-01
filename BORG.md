@@ -30,13 +30,13 @@ sudo chmod 0644 .keys/*.pub
 [Includes & excludes](https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns)
 
 ```sh
-cp backup.includes.sample /usr/local/etc/borg/backup.includes
+cp backup.includes.sample backup.includes
 
-vi /usr/local/etc/borg/backup.includes
+vi backup.includes
 
-cp backup.excludes.sample /usr/local/etc/borg/backup.excludes
+cp backup.excludes.sample backup.excludes
 
-vi /usr/local/etc/borg/backup.excludes
+vi backup.excludes
 ```
 
 [Environment variables](https://borgbackup.readthedocs.io/en/stable/usage/general.html#environment-variables)
