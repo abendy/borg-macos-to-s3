@@ -60,10 +60,10 @@ function main () {
   borg create                                                   \
     --compression zlib,6                                        \
     --exclude-caches                                            \
-    --exclude-from $BORG_EXCLUDES                             \
+    --exclude-from $BORG_EXCLUDES                               \
     --filter AME                                                \
     --list                                                      \
-    --patterns-from $BORG_INCLUDES                            \
+    --patterns-from $BORG_INCLUDES                              \
     --show-rc                                                   \
     --stats                                                     \
     --verbose                                                   \
@@ -89,7 +89,7 @@ function main () {
 
   # Sync to S3
   borg with-lock ${BORG_REPO}                                   \
-    aws s3 sync ${BORG_REPO} s3://$BORG_S3_BUCKET             \
+    aws s3 sync ${BORG_REPO} s3://$BORG_S3_BUCKET               \
       --delete                                                  \
       --no-progress                                             \
       --storage-class=STANDARD_IA                               \
