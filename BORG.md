@@ -1,15 +1,15 @@
 # Borg
 
-## Install
+## Install Borg
 
 ```sh
 brew install borg
 brew cask install borgbackup
 
-git clone git@github.com:abendy/borg-macos-to-s3.git
-cd borg-macos-to-s3
 
 cp borg-backup.sh /usr/local/bin/
+git clone git@github.com:abendy/macos-to-s3.git
+cd macos-to-s3
 
 mkdir -p /usr/local/var/lib/borg/{cache,security}
 ```
