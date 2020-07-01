@@ -83,6 +83,7 @@ function main () {
     --prefix 'macos-{hostname}-'                                \
     --verbose                                                   \
     2>> $BORG_LOG_FILE
+    # logging: https://borgbackup.readthedocs.io/en/stable/usage/general.html#logging
 
   success 'Prune complete'
 
@@ -117,6 +118,7 @@ function alert () {
   aws ses send-raw-email --raw-message file://$TMPFILE > /dev/null
 }
 
+# return codes: https://borgbackup.readthedocs.io/en/stable/usage/general.html#return-codes
 function success () {
   printf "\n%s\n\n" "[ OK ] $1" \
     2>&1 | tee -a $BORG_LOG_FILE

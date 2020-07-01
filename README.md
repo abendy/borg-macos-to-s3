@@ -13,6 +13,10 @@ pip3 install -r requirements.txt
 aws configure
 ```
 
+## Borg
+
+[Go to Borg](/blob/develop/BORG.md)
+
 ***
 
 ### Thanks
