@@ -23,12 +23,12 @@ sudo apt install borgbackup
 ## Key
 
 ```sh
-mkdir -p .keys
+mkdir -p keys
 
-sudo ssh-keygen -t ed25519 -C "Borg" -f .keys/id_ed25519
+sudo ssh-keygen -t ed25519 -C "Borg" -f keys/id_ed25519
 
-sudo chmod 0600 .keys/*
-sudo chmod 0644 .keys/*.pub
+sudo chmod 0600 keys/*
+sudo chmod 0644 keys/*.pub
 ```
 
 ## Config
@@ -36,21 +36,21 @@ sudo chmod 0644 .keys/*.pub
 [Includes & excludes](https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns)
 
 ```sh
-cp backup.includes.sample backup.includes
+cp etc/backup.includes.sample etc/backup.includes
 
-vi backup.includes
+vi etc/backup.includes
 
-cp backup.excludes.sample backup.excludes
+cp etc/backup.excludes.sample etc/backup.excludes
 
-vi backup.excludes
+vi etc/backup.excludes
 ```
 
 [Environment variables](https://borgbackup.readthedocs.io/en/stable/usage/general.html#environment-variables)
 
 ```sh
-cp .env.sample .env
+cp etc/.env.sample etc/.env
 
-vi .env
+vi etc/.env
 ```
 
 ## Repo (local destination)
@@ -64,7 +64,7 @@ borg init --encryption=repokey-blake2
 ## Repo (remote destination)
 
 ```sh
-sudo ssh-copy-id -i .keys/id_ed25519.pub ubuntu@ec2-52-87-179-253.compute-1.amazonaws.com
+sudo ssh-copy-id -i keys/id_ed25519.pub ubuntu@ec2-52-87-179-253.compute-1.amazonaws.com
 
 borg init --encryption=keyfile-blake2
 ```
