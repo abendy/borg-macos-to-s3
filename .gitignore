@@ -1,0 +1,6 @@
+.env
+.keys
+*.log
+backup.excludes
+backup.includes
+venv
