@@ -6,8 +6,6 @@
 brew install borg
 brew cask install borgbackup
 
-
-cp borg-backup.sh /usr/local/bin/
 git clone git@github.com:abendy/macos-to-s3.git
 cd macos-to-s3
 
@@ -58,7 +56,7 @@ borg init --encryption=repokey-blake2
 ## Backup
 
 ```sh
-sudo /usr/local/bin/borg-backup.sh
+sudo borg-backup.sh
 ```
 
 ***
