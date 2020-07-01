@@ -42,9 +42,9 @@ vi backup.excludes
 [Environment variables](https://borgbackup.readthedocs.io/en/stable/usage/general.html#environment-variables)
 
 ```sh
-cp .env.sample /usr/local/etc/borg/.env
+cp .env.sample .env
 
-vi /usr/local/etc/borg/.env
+vi .env
 ```
 
 ## Repo
