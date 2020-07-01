@@ -103,7 +103,7 @@ function alert () {
   BODY=`echo "$1" | /usr/bin/base64`
 
   TEMPLATE="ses-email-template.json"
-  TMPFILE="/tmp/ses-$(date +%s)"
+  TMPFILE="/tmp/ses-${RN}"
 
   cp $TEMPLATE $TMPFILE
 
