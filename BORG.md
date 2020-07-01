@@ -23,12 +23,12 @@ sudo apt install borgbackup
 ## Key
 
 ```sh
-mkdir -p .keys
+mkdir -p keys
 
-sudo ssh-keygen -t ed25519 -C "Borg" -f .keys/id_ed25519
+sudo ssh-keygen -t ed25519 -C "Borg" -f keys/id_ed25519
 
-sudo chmod 0600 .keys/*
-sudo chmod 0644 .keys/*.pub
+sudo chmod 0600 keys/*
+sudo chmod 0644 keys/*.pub
 ```
 
 ## Config
@@ -64,7 +64,7 @@ borg init --encryption=repokey-blake2
 ## Repo (remote destination)
 
 ```sh
-sudo ssh-copy-id -i .keys/id_ed25519.pub ubuntu@ec2-52-87-179-253.compute-1.amazonaws.com
+sudo ssh-copy-id -i keys/id_ed25519.pub ubuntu@ec2-52-87-179-253.compute-1.amazonaws.com
 
 borg init --encryption=keyfile-blake2
 ```
