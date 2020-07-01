@@ -12,6 +12,14 @@ cd macos-to-s3
 mkdir -p /usr/local/var/lib/borg/{cache,security}
 ```
 
+## Install on remote (remote destination)
+
+```sh
+sudo add-apt-repository ppa:costamagnagianfranco/borgbackup
+sudo apt update
+sudo apt install borgbackup
+```
+
 ## Key
 
 ```sh
@@ -45,12 +53,20 @@ cp .env.sample .env
 vi .env
 ```
 
-## Repo
+## Repo (local destination)
 
 ```sh
 mkdir -p <location>
 
 borg init --encryption=repokey-blake2
+```
+
+## Repo (remote destination)
+
+```sh
+sudo ssh-copy-id -i .keys/id_ed25519.pub ubuntu@ec2-52-87-179-253.compute-1.amazonaws.com
+
+borg init --encryption=keyfile-blake2
 ```
 
 ## Backup
