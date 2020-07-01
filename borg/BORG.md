@@ -61,7 +61,7 @@ vi etc/.env
 ```sh
 mkdir -p <repo_location>
 
-borg init --encryption=repokey-blake2 cd <repo_location>
+borg init --encryption=repokey-blake2 <repo_location>
 ```
 
 ## Repo (remote destination)
@@ -86,6 +86,12 @@ borg init --encryption=keyfile-blake2 user@<aws-ec2-instance>.amazonaws.com
 borg list <repo_location>
 
 borg list <repo_location>::<archive_name>
+```
+
+## Mount an archive
+
+```sh
+borg mount <repo_location>::<archive_name> <extract_path>
 ```
 
 ## Restore an archive
