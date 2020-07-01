@@ -3,8 +3,9 @@
 ## Install Borg
 
 ```sh
-brew install borg
-brew cask install borgbackup
+. venv/bin/activate
+
+pip3 install -r borg/requirements.txt
 
 git clone git@github.com:abendy/macos-to-s3.git
 cd macos-to-s3
@@ -55,22 +56,46 @@ vi etc/.env
 
 ## Repo (local destination)
 
-```sh
-mkdir -p <location>
+[Repository URLs](https://borgbackup.readthedocs.io/en/stable/usage/general.html#repository-urls)
 
-borg init --encryption=repokey-blake2
+```sh
+mkdir -p <repo_location>
+
+borg init --encryption=repokey-blake2 cd <repo_location>
 ```
 
 ## Repo (remote destination)
 
-```sh
-sudo ssh-copy-id -i keys/id_ed25519.pub ubuntu@ec2-52-87-179-253.compute-1.amazonaws.com
+[Repository URLs](https://borgbackup.readthedocs.io/en/stable/usage/general.html#repository-urls)
 
-borg init --encryption=keyfile-blake2
+```sh
+sudo ssh-copy-id -i keys/id_ed25519.pub user@<aws-ec2-instance>.amazonaws.com
+
+borg init --encryption=keyfile-blake2 user@<aws-ec2-instance>.amazonaws.com
 ```
 
 ## Backup
 
 ```sh
-sudo borg-backup.sh
+./borg/borg-backup.sh
+```
+
+## List all archives in the repository:
+
+```sh
+borg list <repo_location>
+
+borg list <repo_location>::<archive_name>
+```
+
+## Restore an archive
+
+```sh
+borg extract <repo_location>::<archive_name>
+```
+
+## Delete an archive
+
+```sh
+borg delete <repo_location>::<archive_name>
 ```

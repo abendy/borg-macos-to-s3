@@ -22,17 +22,17 @@ function check_requirements () {
   fi
 
   # Test for environment variables file
-  if [ ! -f "${BORG_ENV_FILE}" ]; then
+  if [ ! -f "$BORG_ENV_FILE" ]; then
     fail 'No environment variables file. Copy and edit the provided environment variables sample file. See documentation.'
   fi
 
   # Test for includes file
-  if [ ! -f "${BORG_INCLUDES}" ]; then
+  if [ ! -f "$BORG_INCLUDES" ]; then
     fail 'No includes file. Copy and edit the provided sample includes file. See documentation.'
   fi
 
   # Test for excludes file
-  if [ ! -f "${BORG_EXCLUDES}" ]; then
+  if [ ! -f "$BORG_EXCLUDES" ]; then
     fail 'No excludes file. Copy and edit the provided sample excludes file. See documentation.'
   fi
 
@@ -42,33 +42,33 @@ function check_requirements () {
   fi
 
   # Test for S3 bucket
-  if [ -z "${BORG_S3_BUCKET}" ]; then
+  if [ -z "$BORG_S3_BUCKET" ]; then
     fail 'No S3 bucket defined. Fill out the .env file. See documentation.'
   fi
 
   # Test for emails
-  if [ -z "${BORG_FROM_EMAIL}" -o -z "${BORG_TO_EMAIL}" ]; then
+  if [ -z "$BORG_FROM_EMAIL" -o -z "$BORG_TO_EMAIL" ]; then
     fail 'No From or To defined. Fill out the .env file. See documentation.'
   fi
 }
 
 function main () {
   # Truncate log file
-  : > ${BORG_LOG_FILE}
+  : > $BORG_LOG_FILE
 
   # Backup
   borg create                                                   \
     --compression zlib,6                                        \
     --exclude-caches                                            \
-    --exclude-from ${BORG_EXCLUDES}                             \
+    --exclude-from $BORG_EXCLUDES                             \
     --filter AME                                                \
     --list                                                      \
-    --patterns-from ${BORG_INCLUDES}                            \
+    --patterns-from $BORG_INCLUDES                            \
     --show-rc                                                   \
     --stats                                                     \
     --verbose                                                   \
     ::${BORG_BACKUP_NAME}                                       \
-    2>> ${BORG_LOG_FILE}
+    2>> $BORG_LOG_FILE
 
   success 'Backup complete'
 
@@ -82,17 +82,18 @@ function main () {
     --list ${BORG_REPO}                                         \
     --prefix 'macos-{hostname}-'                                \
     --verbose                                                   \
-    2>> ${BORG_LOG_FILE}
+    2>> $BORG_LOG_FILE
+    # logging: https://borgbackup.readthedocs.io/en/stable/usage/general.html#logging
 
   success 'Prune complete'
 
   # Sync to S3
   borg with-lock ${BORG_REPO}                                   \
-    aws s3 sync ${BORG_REPO} s3://${BORG_S3_BUCKET}             \
+    aws s3 sync ${BORG_REPO} s3://$BORG_S3_BUCKET             \
       --delete                                                  \
       --no-progress                                             \
       --storage-class=STANDARD_IA                               \
-      >> ${BORG_LOG_FILE}
+      >> $BORG_LOG_FILE
 
   success 'Sync complete'
 }
@@ -103,13 +104,13 @@ function alert () {
   BODY=`echo "$1" | /usr/bin/base64`
 
   TEMPLATE="ses-email-template.json"
-  TMPFILE="/tmp/ses-$(date +%s)"
+  TMPFILE="/tmp/ses-${RN}"
 
   cp $TEMPLATE $TMPFILE
 
   sed -i -e "s/{SUBJECT}/$1/g" $TMPFILE
-  sed -i -e "s/{FROM}/${BORG_FROM_EMAIL}/g" $TMPFILE
-  sed -i -e "s/{RECVS}/${BORG_TO_EMAIL}/g" $TMPFILE
+  sed -i -e "s/{FROM}/$BORG_FROM_EMAIL/g" $TMPFILE
+  sed -i -e "s/{RECVS}/$BORG_TO_EMAIL/g" $TMPFILE
   sed -i -e "s/{BODY}/$BODY/g" $TMPFILE
   sed -i -e "s/{FILENAME}/$FILENAME/g" $TMPFILE
   sed -i -e "s/{ATTACHMENT}/$ATTACHMENT/g" $TMPFILE
@@ -117,14 +118,15 @@ function alert () {
   aws ses send-raw-email --raw-message file://$TMPFILE > /dev/null
 }
 
+# return codes: https://borgbackup.readthedocs.io/en/stable/usage/general.html#return-codes
 function success () {
   printf "\n%s\n\n" "[ OK ] $1" \
-    2>&1 | tee -a ${BORG_LOG_FILE}
+    2>&1 | tee -a $BORG_LOG_FILE
 }
 
 function fail () {
   printf "\n%s\n\n" "[ FAIL ] $1"  \
-    2>&1 | tee -a ${BORG_LOG_FILE}
+    2>&1 | tee -a $BORG_LOG_FILE
 
   exit 1
 }
@@ -133,7 +135,7 @@ function fail () {
 RN=$(date '+%Y-%m-%d-%H:%M:%S')
 
 BORG_ENV_FILE='.env'
-source ${BORG_ENV_FILE}
+source $BORG_ENV_FILE
 
 # Exit if borg is already running
 check_last
