@@ -3,8 +3,9 @@
 ## Install Borg
 
 ```sh
-brew install borg
-brew cask install borgbackup
+. venv/bin/activate
+
+pip3 install -r borg/requirements.txt
 
 git clone git@github.com:abendy/macos-to-s3.git
 cd macos-to-s3
