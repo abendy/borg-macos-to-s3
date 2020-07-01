@@ -17,12 +17,12 @@ mkdir -p /usr/local/var/lib/borg/{cache,security}
 ## Key
 
 ```sh
-mkdir -p /usr/local/etc/borg/{keys}
+mkdir -p .keys
 
-sudo ssh-keygen -t ed25519 -C "Borg" -f /usr/local/etc/borg/keys/id_ed25519
+sudo ssh-keygen -t ed25519 -C "Borg" -f .keys/id_ed25519
 
-sudo chmod 0600 /usr/local/etc/borg/keys/*
-sudo chmod 0644 /usr/local/etc/borg/keys/*.pub
+sudo chmod 0600 .keys/*
+sudo chmod 0644 .keys/*.pub
 ```
 
 ## Config
