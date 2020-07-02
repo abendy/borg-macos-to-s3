@@ -75,10 +75,10 @@ function main () {
   # Prune
   borg prune                                                    \
     --keep-within 2d                                            \
-    --keep-hourly=24                                            \
-    --keep-daily=14                                             \
-    --keep-weekly=4                                             \
-    --keep-monthly=6                                            \
+    --keep-hourly=${12:-$KEEP_HOURLY}                           \
+    --keep-daily=${5:-$KEEP_DAILY}                              \
+    --keep-weekly=${2:-$KEEP_WEEKLY}                            \
+    --keep-monthly=${1:-$KEEP_MONTHLY}                          \
     --list ${BORG_REPO}                                         \
     --prefix 'macos-{hostname}-'                                \
     --verbose                                                   \
