@@ -61,7 +61,7 @@ vi etc/.env
 ```sh
 mkdir -p <repo_location>
 
-borg init --encryption=repokey-blake2 <repo_location>
+borg init --encryption=repokey-blake2 --storage-quota=<size>G <repo_location>
 ```
 
 ## Repo (remote destination)
@@ -71,7 +71,7 @@ borg init --encryption=repokey-blake2 <repo_location>
 ```sh
 sudo ssh-copy-id -i keys/id_ed25519.pub user@<aws-ec2-instance>.amazonaws.com
 
-borg init --encryption=keyfile-blake2 user@<aws-ec2-instance>.amazonaws.com
+borg init --encryption=keyfile-blake2 --storage-quota=<size>G user@<aws-ec2-instance>.amazonaws.com
 ```
 
 ## Backup
