@@ -165,7 +165,7 @@ function fail () {
 # Set up the environment
 RN=$(date '+%Y-%m-%d--%H-%M-%S')
 
-BORG_ENV_FILE='etc/.env'
+BORG_ENV_FILE='.env'
 source $BORG_ENV_FILE
 
 # Exit if borg is already running
