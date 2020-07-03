@@ -37,13 +37,13 @@ sudo chmod 0644 keys/*.pub
 [Includes & excludes](https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns)
 
 ```sh
-cp backup.includes.sample backup.includes
+cp etc/backup.includes.sample etc/backup.includes
 
-vi backup.includes
+vi etc/backup.includes
 
-cp backup.excludes.sample backup.excludes
+cp etc/backup.excludes.sample etc/backup.excludes
 
-vi backup.excludes
+vi etc/backup.excludes
 ```
 
 [Environment variables](https://borgbackup.readthedocs.io/en/stable/usage/general.html#environment-variables)
