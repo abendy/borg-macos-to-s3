@@ -1,9 +1,12 @@
 # Backup macOS to S3
 
-## Install tooling
+## Install
 
 ```sh
 python3 -m pip install --user virtualenv
+
+git clone git@github.com:abendy/macos-to-s3.git
+cd macos-to-s3
 
 virtualenv venv
 . venv/bin/activate
@@ -11,32 +14,11 @@ virtualenv venv
 pip3 install -r requirements.txt
 
 aws configure
-```
-
-## Borg
-
-### Install Borg
-
-```sh
-. venv/bin/activate
-
-pip3 install -r borg/requirements.txt
-
-git clone git@github.com:abendy/macos-to-s3.git
-cd macos-to-s3
 
 mkdir -p /usr/local/var/lib/borg/{cache,security}
 ```
 
-### Install on remote (remote destination)
-
-```sh
-sudo add-apt-repository ppa:costamagnagianfranco/borgbackup
-sudo apt update
-sudo apt install borgbackup
-```
-
-### Key
+## Key
 
 ```sh
 mkdir -p keys
@@ -47,7 +29,7 @@ sudo chmod 0600 keys/*
 sudo chmod 0644 keys/*.pub
 ```
 
-### Config
+## Config
 
 [Includes & excludes](https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns)
 
@@ -69,7 +51,7 @@ cp .env.sample .env
 vi .env
 ```
 
-### Repo (local destination)
+## Repo (local destination)
 
 [Repository URLs](https://borgbackup.readthedocs.io/en/stable/usage/general.html#repository-urls)
 
@@ -79,23 +61,13 @@ mkdir -p <repo_location>
 borg init --encryption=repokey-blake2 --storage-quota=<size>G <repo_location>
 ```
 
-### Repo (remote destination)
-
-[Repository URLs](https://borgbackup.readthedocs.io/en/stable/usage/general.html#repository-urls)
+## Backup
 
 ```sh
-sudo ssh-copy-id -i keys/id_ed25519.pub user@<aws-ec2-instance>.amazonaws.com
-
-borg init --encryption=keyfile-blake2 --storage-quota=<size>G user@<aws-ec2-instance>.amazonaws.com
+./borg-backup.sh
 ```
 
-### Backup
-
-```sh
-./borg/borg-backup.sh
-```
-
-### List all archives in the repository:
+## List all archives in the repository:
 
 ```sh
 borg list <repo_location>
@@ -103,19 +75,19 @@ borg list <repo_location>
 borg list <repo_location>::<archive_name>
 ```
 
-### Mount an archive
+## Mount an archive
 
 ```sh
 borg mount <repo_location>::<archive_name> <extract_path>
 ```
 
-### Restore an archive
+## Restore an archive
 
 ```sh
 borg extract <repo_location>::<archive_name>
 ```
 
-### Delete an archive
+## Delete an archive
 
 ```sh
 borg delete <repo_location>::<archive_name>
