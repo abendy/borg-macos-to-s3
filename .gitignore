@@ -1,6 +1,6 @@
 .env
 *.log
-backup.excludes
-backup.includes
+*.excludes
+*.includes
 keys
 venv

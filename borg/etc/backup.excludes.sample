@@ -1,5 +1,6 @@
 re:cache
 re:Cache
+re:\.DS_Store
 re:\.log$
 re:/node_modules/
 re:/\.Trash/

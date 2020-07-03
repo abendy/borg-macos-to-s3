@@ -26,9 +26,19 @@ function check_requirements () {
     fail 'No environment variables file. Copy and edit the provided environment variables sample file. See documentation.'
   fi
 
-  # Test for includes file
-  if [ ! -f "$BORG_INCLUDES" ]; then
-    fail 'No includes file. Copy and edit the provided sample includes file. See documentation.'
+  # Test for log file
+  if [ ! -f "$BORG_LOG_FILE" ]; then
+    fail 'No log file defined. Fill out the .env file. See documentation.'
+  fi
+
+  # Test for user includes file
+  if [ ! -f "$BORG_USER_INCLUDES" ]; then
+    fail 'No user includes file. Copy and edit the provided sample includes file. See documentation.'
+  fi
+
+  # Test for work includes file
+  if [ ! -f "$BORG_WORK_INCLUDES" ]; then
+    fail 'No work includes file. Copy and edit the provided sample includes file. See documentation.'
   fi
 
   # Test for excludes file
@@ -39,6 +49,11 @@ function check_requirements () {
   # Test for backup repository
   if [ -z "${BORG_REPO}" ]; then
     fail 'No backup repository defined. Fill out the .env file. See documentation.'
+  fi
+
+  # Test for backup name prefix
+  if [ -z "$BORG_BACKUP_NAME_PREFIX" ]; then
+    fail 'No backup name prefix defined. Fill out the .env file. See documentation.'
   fi
 
   # Test for S3 bucket
@@ -56,21 +71,37 @@ function main () {
   # Truncate log file
   : > $BORG_LOG_FILE
 
-  # Backup
+  # Work Backup
   borg create                                                   \
     --compression zlib,6                                        \
     --exclude-caches                                            \
     --exclude-from $BORG_EXCLUDES                               \
     --filter AME                                                \
     --list                                                      \
-    --patterns-from $BORG_INCLUDES                              \
+    --patterns-from $BORG_WORK_INCLUDES                         \
     --show-rc                                                   \
     --stats                                                     \
     --verbose                                                   \
-    ::${BORG_BACKUP_NAME}                                       \
+    ::${BORG_WORK_BACKUP_NAME}                                  \
     2>> $BORG_LOG_FILE
 
-  success 'Backup complete'
+  success 'Work backup complete'
+
+  # User Backup
+  borg create                                                   \
+    --compression zlib,6                                        \
+    --exclude-caches                                            \
+    --exclude-from $BORG_EXCLUDES                               \
+    --filter AME                                                \
+    --list                                                      \
+    --patterns-from $BORG_USER_INCLUDES                         \
+    --show-rc                                                   \
+    --stats                                                     \
+    --verbose                                                   \
+    ::${BORG_USER_BACKUP_NAME}                                  \
+    2>> $BORG_LOG_FILE
+
+  success 'User backup complete'
 
   # Prune
   borg prune                                                    \
@@ -80,7 +111,7 @@ function main () {
     --keep-weekly=${2:-$KEEP_WEEKLY}                            \
     --keep-monthly=${1:-$KEEP_MONTHLY}                          \
     --list ${BORG_REPO}                                         \
-    --prefix 'macos-{hostname}-'                                \
+    --prefix $BORG_BACKUP_NAME_PREFIX                           \
     --verbose                                                   \
     2>> $BORG_LOG_FILE
     # logging: https://borgbackup.readthedocs.io/en/stable/usage/general.html#logging
@@ -132,7 +163,7 @@ function fail () {
 }
 
 # Set up the environment
-RN=$(date '+%Y-%m-%d-%H:%M:%S')
+RN=$(date '+%Y-%m-%d--%H-%M-%S')
 
 BORG_ENV_FILE='etc/.env'
 source $BORG_ENV_FILE
