@@ -37,21 +37,21 @@ sudo chmod 0644 keys/*.pub
 [Includes & excludes](https://borgbackup.readthedocs.io/en/stable/usage/help.html#borg-help-patterns)
 
 ```sh
-cp etc/backup.includes.sample etc/backup.includes
+cp backup.includes.sample backup.includes
 
-vi etc/backup.includes
+vi backup.includes
 
-cp etc/backup.excludes.sample etc/backup.excludes
+cp backup.excludes.sample backup.excludes
 
-vi etc/backup.excludes
+vi backup.excludes
 ```
 
 [Environment variables](https://borgbackup.readthedocs.io/en/stable/usage/general.html#environment-variables)
 
 ```sh
-cp etc/.env.sample etc/.env
+cp .env.sample .env
 
-vi etc/.env
+vi .env
 ```
 
 ## Repo (local destination)
@@ -61,7 +61,7 @@ vi etc/.env
 ```sh
 mkdir -p <repo_location>
 
-borg init --encryption=repokey-blake2 cd <repo_location>
+borg init --encryption=repokey-blake2 --storage-quota=<size>G <repo_location>
 ```
 
 ## Repo (remote destination)
@@ -71,7 +71,7 @@ borg init --encryption=repokey-blake2 cd <repo_location>
 ```sh
 sudo ssh-copy-id -i keys/id_ed25519.pub user@<aws-ec2-instance>.amazonaws.com
 
-borg init --encryption=keyfile-blake2 user@<aws-ec2-instance>.amazonaws.com
+borg init --encryption=keyfile-blake2 --storage-quota=<size>G user@<aws-ec2-instance>.amazonaws.com
 ```
 
 ## Backup
@@ -86,6 +86,12 @@ borg init --encryption=keyfile-blake2 user@<aws-ec2-instance>.amazonaws.com
 borg list <repo_location>
 
 borg list <repo_location>::<archive_name>
+```
+
+## Mount an archive
+
+```sh
+borg mount <repo_location>::<archive_name> <extract_path>
 ```
 
 ## Restore an archive
