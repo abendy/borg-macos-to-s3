@@ -109,13 +109,12 @@ function main () {
 }
 
 function alert () {
-  FILENAME=$(basename "${BORG_LOG_FILE%}")
-  ATTACHMENT=`/usr/bin/base64 -i $BORG_LOG_FILE`
   BODY=`echo "$1" | /usr/bin/base64`
+  FILENAME=$(basename "${BORG_LOG_FILE%}")
+  ATTACHMENT=`/usr/bin/base64 -i -0 $BORG_LOG_FILE`
 
   TEMPLATE="ses-email-template.json"
   TMPFILE="/tmp/ses-${RN}"
-
   cp $TEMPLATE $TMPFILE
 
   sed -i -e "s/{SUBJECT}/$1/g" $TMPFILE
@@ -123,7 +122,7 @@ function alert () {
   sed -i -e "s/{RECVS}/$BORG_TO_EMAIL/g" $TMPFILE
   sed -i -e "s/{BODY}/$BODY/g" $TMPFILE
   sed -i -e "s/{FILENAME}/$FILENAME/g" $TMPFILE
-  sed -i -e "s/{ATTACHMENT}/$ATTACHMENT/g" $TMPFILE
+  printf '%s\0' $TMPFILE | xargs -0 sed -i -e "s/{ATTACHMENT}/$ATTACHMENT/g" $TMPFILE
 
   aws ses send-raw-email --raw-message file://$TMPFILE > /dev/null
 }
