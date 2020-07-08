@@ -109,20 +109,14 @@ function main () {
 }
 
 function alert () {
+  SUBJECT=$1
   BODY=`echo "$1" | /usr/bin/base64`
   FILENAME=$(basename "${BORG_LOG_FILE%}")
   ATTACHMENT=`/usr/bin/base64 -i -0 $BORG_LOG_FILE`
 
-  TEMPLATE="ses-email-template.json"
   TMPFILE="/tmp/ses-${RN}"
-  cp $TEMPLATE $TMPFILE
 
-  sed -i -e "s/{SUBJECT}/$1/g" $TMPFILE
-  sed -i -e "s/{FROM}/$BORG_FROM_EMAIL/g" $TMPFILE
-  sed -i -e "s/{RECVS}/$BORG_TO_EMAIL/g" $TMPFILE
-  sed -i -e "s/{BODY}/$BODY/g" $TMPFILE
-  sed -i -e "s/{FILENAME}/$FILENAME/g" $TMPFILE
-  printf '%s\0' $TMPFILE | xargs -0 sed -i -e "s/{ATTACHMENT}/$ATTACHMENT/g" $TMPFILE
+  echo -E '{"Data": "From:'$BORG_FROM_EMAIL'\nTo:'$BORG_TO_EMAIL'\nSubject:'${SUBJECT}'\nMIME-Version: 1.0\nContent-type: Multipart/Mixed; boundary=\"NextPart\"\n\n--NextPart\nContent-Type: text/plain\nContent-Transfer-Encoding: base64\n\n['$BODY']\n\n--NextPart\nContent-Type: text/plain;\nContent-Disposition: attachment; filename=\"'$FILENAME'\"\nContent-Transfer-Encoding: base64\n\n'$ATTACHMENT'\n--NextPart--"}' > $TMPFILE
 
   aws ses send-raw-email --raw-message file://$TMPFILE > /dev/null
 }
