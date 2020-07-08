@@ -80,6 +80,7 @@ function main () {
     ::${BORG_BACKUP_NAME}                                       \
     2>> $BORG_LOG_FILE
 
+  backup_exit=$?
   success 'Backup complete'
 
   # Prune
@@ -95,6 +96,7 @@ function main () {
     2>> $BORG_LOG_FILE
     # logging: https://borgbackup.readthedocs.io/en/stable/usage/general.html#logging
 
+  prune_exit=$?
   success 'Prune complete'
 
   # Sync to S3
@@ -105,6 +107,7 @@ function main () {
       --storage-class=STANDARD_IA                               \
       >> $BORG_LOG_FILE
 
+  sync_exit=$?
   success 'Sync complete'
 }
 
@@ -156,7 +159,15 @@ check_requirements
 main "$@";
 
 # Let me know how it went
-alert "Borg backup complete at $(date '+%Y-%m-%d-%H:%M:%S')"
+global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
+
+if [ ${global_exit} -eq 0 ]; then
+  alert "Borg backup complete at $(date '+%Y-%m-%d-%H:%M:%S')"
+elif [ ${global_exit} -eq 1 ]; then
+  alert "Borg backup finished with warnings at $(date '+%Y-%m-%d-%H:%M:%S')"
+else
+  alert "Borg backup finished with errors at $(date '+%Y-%m-%d-%H:%M:%S')"
+fi
 
 # l8
-exit 0;
+exit ${global_exit}
