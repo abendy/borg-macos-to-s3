@@ -31,14 +31,9 @@ function check_requirements () {
     fail 'No log file defined. Fill out the .env file. See documentation.'
   fi
 
-  # Test for user includes file
-  if [ ! -f "$BORG_USER_INCLUDES" ]; then
-    fail 'No user includes file. Copy and edit the provided sample includes file. See documentation.'
-  fi
-
-  # Test for work includes file
-  if [ ! -f "$BORG_WORK_INCLUDES" ]; then
-    fail 'No work includes file. Copy and edit the provided sample includes file. See documentation.'
+  # Test for includes file
+  if [ ! -f "$BORG_INCLUDES" ]; then
+    fail 'No includes file. Copy and edit the provided sample includes file. See documentation.'
   fi
 
   # Test for excludes file
@@ -71,37 +66,21 @@ function main () {
   # Truncate log file
   : > $BORG_LOG_FILE
 
-  # Work Backup
+  # Backup
   borg create                                                   \
     --compression zlib,6                                        \
     --exclude-caches                                            \
     --exclude-from $BORG_EXCLUDES                               \
     --filter AME                                                \
     --list                                                      \
-    --patterns-from $BORG_WORK_INCLUDES                         \
+    --patterns-from $BORG_INCLUDES                              \
     --show-rc                                                   \
     --stats                                                     \
     --verbose                                                   \
-    ::${BORG_WORK_BACKUP_NAME}                                  \
+    ::${BORG_BACKUP_NAME}                                       \
     2>> $BORG_LOG_FILE
 
-  success 'Work backup complete'
-
-  # User Backup
-  borg create                                                   \
-    --compression zlib,6                                        \
-    --exclude-caches                                            \
-    --exclude-from $BORG_EXCLUDES                               \
-    --filter AME                                                \
-    --list                                                      \
-    --patterns-from $BORG_USER_INCLUDES                         \
-    --show-rc                                                   \
-    --stats                                                     \
-    --verbose                                                   \
-    ::${BORG_USER_BACKUP_NAME}                                  \
-    2>> $BORG_LOG_FILE
-
-  success 'User backup complete'
+  success 'Backup complete'
 
   # Prune
   borg prune                                                    \
