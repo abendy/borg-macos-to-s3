@@ -2,19 +2,22 @@
 
 ## Install
 
-```sh
-python3 -m pip install --user virtualenv
+### Clone this repository, install virtualenv, init a virtual env and activate it
 
+```sh
 git clone git@github.com:abendy/macos-to-s3.git
 cd macos-to-s3
 
+python3 -m pip install --user virtualenv
 virtualenv venv
 . venv/bin/activate
 
 pip3 install -r requirements.txt
+```
 
-aws configure
+### Create directories for cache and security
 
+```sh
 mkdir -p /usr/local/var/lib/borg/{cache,security}
 ```
 
@@ -51,7 +54,18 @@ cp .env.sample .env
 vi .env
 ```
 
-## Repo (local destination)
+You could source this from your shell run commands config
+
+```sh
+source <path_to>/.env
+```
+
+### Configure AWS CLI with some admin credentials
+
+```sh
+aws configure
+```
+
 
 [Repository URLs](https://borgbackup.readthedocs.io/en/stable/usage/general.html#repository-urls)
 
