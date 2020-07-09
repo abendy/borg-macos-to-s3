@@ -60,6 +60,17 @@ You could source this from your shell run commands config
 source <path_to>/.env
 ```
 
+### Setup GPG and Password Store
+
+```sh
+brew cask install gpg-suite
+brew install pass
+
+pass init <gpg_id>
+pass generate borg
+pass show borg
+```
+
 ### Configure AWS CLI with some admin credentials
 
 ```sh
