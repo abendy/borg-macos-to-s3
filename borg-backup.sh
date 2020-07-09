@@ -3,6 +3,12 @@
 # Exit immediately on errors
 set -e
 
+# Helpers and error handling:
+function info () {
+  printf "\n%s %s\n\n" "$( date )" "$*" >&2;
+}
+trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
+
 function check_last () {
   if ps ax | grep $0 | grep -v $$ | grep bash | grep -v grep > /dev/null; then
     echo 'Backup already running'
