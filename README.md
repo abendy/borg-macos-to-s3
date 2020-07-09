@@ -88,6 +88,22 @@ aws iam create-access-key --user-name <user_name>
 
 Copy the access key and secret access key and fill out the .env file
 
+### Create an S3 bucket
+
+```sh
+aws s3 mb s3://<bucket_name> --region <region>
+??? aws s3api create-bucket --bucket <bucket_name> --region <region> --acl private --grant-write "id=<id>"
+
+??? aws s3api put-bucket-acl --bucket <bucket_name> --grant-read-acp "id=$(aws sts get-caller-identity | jq '.UserId | tonumber')" --grant-write "id=$(aws sts get-caller-identity | jq '.UserId | tonumber')"
+
+??? aws kms create-key --policy <policy> --description <desc> --key-usage <value>
+
+??? aws s3api put-bucket-encryption --bucket <bucket name> --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"aws:kms","KMSMasterKeyID":"<key_id>"}}]}'
+
+??? aws ses help
+set up domain validation and other stuff
+```
+
 ## Repo
 
 [Repository URLs](https://borgbackup.readthedocs.io/en/stable/usage/general.html#repository-urls)
@@ -96,6 +112,9 @@ Copy the access key and secret access key and fill out the .env file
 mkdir -p <repo_location>
 
 sudo -E borg init --encryption=repokey-blake2 --storage-quota=<size>G <repo_location>
+
+# keyfile-blake2
+
 ```
 
 ## Backup
