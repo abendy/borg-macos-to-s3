@@ -74,6 +74,20 @@ pass show borg
 aws configure
 ```
 
+### Create an AWS user and group w/ S3 access
+
+```sh
+aws iam create-group --group-name <group_name>
+
+aws iam attach-group-policy --group-name <group_name> --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+aws iam add-user-to-group --group-name <group_name> --user-name <user_name>
+
+aws iam create-access-key --user-name <user_name>
+```
+
+Copy the access key and secret access key and fill out the .env file
+
 
 [Repository URLs](https://borgbackup.readthedocs.io/en/stable/usage/general.html#repository-urls)
 
