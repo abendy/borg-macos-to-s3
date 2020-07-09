@@ -58,39 +58,39 @@ vi .env
 ```sh
 mkdir -p <repo_location>
 
-borg init --encryption=repokey-blake2 --storage-quota=<size>G <repo_location>
+sudo -E borg init --encryption=repokey-blake2 --storage-quota=<size>G <repo_location>
 ```
 
 ## Backup
 
 ```sh
-./borg-backup.sh
+sudo -E ./borg-backup.sh
 ```
 
 ## List all archives in the repository:
 
 ```sh
-borg list <repo_location>
+sudo -E borg list <repo_location>
 
-borg list <repo_location>::<archive_name>
+sudo -E borg list <repo_location>::<archive_name>
 ```
 
 ## Mount an archive
 
 ```sh
-borg mount <repo_location>::<archive_name> <extract_path>
+sudo -E borg mount <repo_location>::<archive_name> <extract_path>
 ```
 
 ## Restore an archive
 
 ```sh
-borg extract <repo_location>::<archive_name>
+sudo -E borg extract <repo_location>::<archive_name>
 ```
 
 ## Delete an archive
 
 ```sh
-borg delete <repo_location>::<archive_name>
+sudo -E borg delete <repo_location>::<archive_name>
 ```
 
 ***
