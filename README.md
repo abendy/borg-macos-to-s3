@@ -38,11 +38,9 @@ sudo chmod 0644 keys/*.pub
 
 ```sh
 cp etc/backup.includes.sample etc/backup.includes
-
 vi etc/backup.includes
 
 cp etc/backup.excludes.sample etc/backup.excludes
-
 vi etc/backup.excludes
 ```
 
@@ -50,7 +48,6 @@ vi etc/backup.excludes
 
 ```sh
 cp .env.sample .env
-
 vi .env
 ```
 
